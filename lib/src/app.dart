@@ -1,24 +1,28 @@
 // Import flutter helper library
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'models/image_models.dart';
 import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' show get;
+
+import 'models/image_models.dart';
 import 'widgets/image_list.dart';
 
 class App extends StatefulWidget {
-  createState() {
-    return AppState();
-  }
+  const App({Key? key}) : super(key: key);
+
+  @override
+  State<App> createState() => _AppState();
 }
 
-class AppState extends State<App> {
+class _AppState extends State<App> {
   int counter = 0;
   List<ImageModel> images = [];
 
   void fetchImage() async {
     counter++;
-    var response = await (Uri.parse(
-        'https://jsonplaceholder.typicode.com/photos/$counter'));
+    final response = await get(
+      Uri.parse('https://jsonplaceholder.typicode.com/photos/$counter'),
+    );
     var imageModel = ImageModel.fromJson(json.decode(response.body));
 
     setState(() {
@@ -27,8 +31,9 @@ class AppState extends State<App> {
   }
 
 // Must define a 'build' method that returns the widget that 'this' widget will show
-  Widget build(context) {
-    MaterialApp(
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
       home: Scaffold(
         body: ImageList(images),
         floatingActionButton: FloatingActionButton(
